@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Bangazon Reports</title>
+    {% comment %} <link rel="stylesheet" type="text/css" href="{% static 'levelupreports/styles.css' %}"> {% endcomment %}
+  </head>
+  <body>
+    <h1>Vehicles Over $999</h1>
+    {% for product in expensiveproducts_list %}
+        <ul>
+            <li>Vehicle Model: {{ product.product_name }}</li>
+            <li>Price: ${{ product.product_price }}</li>
+            <li>Product Id: {{ product.id }}</li>
+        </ul>
+    {% endfor %}
+  </body>
+</html>

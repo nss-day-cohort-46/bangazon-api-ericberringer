@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Bangazon Reports</title>
+    {% comment %} <link rel="stylesheet" type="text/css" href="{% static 'levelupreports/styles.css' %}"> {% endcomment %}
+  </head>
+  <body>
+    <h1>User's Favorites</h1>
+        <h2>Users That Favorited People</h2>
+    {% for favorite in userfavorite_list %}
+        <ul>
+            <li>{{ favorite.full_name }}</li>
+            {% for seller in favorite.sellers %}
+            <ul>
+                <li>{{ seller.user.first_name }}</li>
+            </ul>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+  </body>
+</html>

@@ -8,8 +8,16 @@
   </head>
   <body>
     <h1>User's Favorites</h1>
+        <h2>Users That Favorited People</h2>
     {% for favorite in userfavorite_list %}
-        <h2>Favorite User: {{ favorite.full_name }}</h2>
+        <ul>
+            <li>{{ favorite.full_name }}</li>
+            {% for seller in favorite.sellers %}
+            <ul>
+                <li>{{ seller.user.first_name }}</li>
+            </ul>
+            {% endfor %}
+        </ul>
     {% endfor %}
   </body>
 </html>

@@ -48,7 +48,7 @@ class PaymentTests(APITestCase):
 
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
         response = self.client.delete(f"/payments/1")
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
         # GET PAYMENT AGAIN TO VERIFY 404 response
         response = self.client.get(f"/payments/1")

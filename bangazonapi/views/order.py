@@ -10,34 +10,6 @@ from bangazonapi.models import Order, Payment, Customer, Product, OrderProduct
 from .product import ProductSerializer
 
 
-class OrderLineItemSerializer(serializers.HyperlinkedModelSerializer):
-    """JSON serializer for line items """
-
-    product = ProductSerializer(many=False)
-
-    class Meta:
-        model = OrderProduct
-        url = serializers.HyperlinkedIdentityField(
-            view_name='lineitem',
-            lookup_field='id'
-        )
-        fields = ('id', 'product')
-        depth = 1
-
-class OrderSerializer(serializers.HyperlinkedModelSerializer):
-    """JSON serializer for customer orders"""
-
-    lineitems = OrderLineItemSerializer(many=True)
-
-    class Meta:
-        model = Order
-        url = serializers.HyperlinkedIdentityField(
-            view_name='order',
-            lookup_field='id'
-        )
-        fields = ('id', 'url', 'created_date', 'payment_type', 'customer', 'lineitems')
-
-
 class Orders(ViewSet):
     """View for interacting with customer orders"""
 
@@ -104,7 +76,8 @@ class Orders(ViewSet):
         """
         customer = Customer.objects.get(user=request.auth.user)
         order = Order.objects.get(pk=pk, customer=customer)
-        order.payment_type = request.data["payment_type"]
+        # payment = Payment.objects.get(pk=request.data["payment_type"])
+        order.payment_type_id = request.data["payment_type"]
         order.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
@@ -150,3 +123,30 @@ class Orders(ViewSet):
             orders, many=True, context={'request': request})
 
         return Response(json_orders.data)
+
+class OrderLineItemSerializer(serializers.HyperlinkedModelSerializer):
+    """JSON serializer for line items """
+
+    product = ProductSerializer(many=False)
+
+    class Meta:
+        model = OrderProduct
+        url = serializers.HyperlinkedIdentityField(
+            view_name='lineitem',
+            lookup_field='id'
+        )
+        fields = ('id', 'product')
+        depth = 1
+
+class OrderSerializer(serializers.HyperlinkedModelSerializer):
+    """JSON serializer for customer orders"""
+
+    lineitems = OrderLineItemSerializer(many=True)
+
+    class Meta:
+        model = Order
+        url = serializers.HyperlinkedIdentityField(
+            view_name='order',
+            lookup_field='id'
+        )
+        fields = ('id', 'url', 'created_date', 'payment_type', 'customer', 'lineitems')

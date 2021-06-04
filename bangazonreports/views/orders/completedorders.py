@@ -10,6 +10,8 @@ def completedorders_list(request):
             conn.row_factory = sqlite3.Row
             db_cursor = conn.cursor()
 
+            # ORM layout orders = Order.objects.filter(payment_type__isnull = False).annotate(total=Sum("lineitems__products__price"))
+
             db_cursor.execute("""
                 SELECT
                     SUM(p.price) total_order_price,

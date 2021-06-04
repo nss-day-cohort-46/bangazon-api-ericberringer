@@ -14,8 +14,11 @@ class Product(SafeDeleteModel):
     name = models.CharField(max_length=50,)
     customer = models.ForeignKey(
         Customer, on_delete=models.DO_NOTHING, related_name='products')
+        # validators may need a model.full_clean(), .clean_fields, or .clean() to run before a save method in views
+        # .clean_fields(exclude=image_path) you can exlude a field from clean_fields.
+        # float field uses python's built in float type, DecimalField uses python's decimal type.
     price = models.FloatField(
-        validators=[MinValueValidator(0.00), MaxValueValidator(10000.00)],)
+        validators=[MinValueValidator(0.00), MaxValueValidator(17500.00)],)
     description = models.CharField(max_length=255,)
     quantity = models.IntegerField(validators=[MinValueValidator(0)],)
     created_date = models.DateField(auto_now_add=True)

@@ -17,7 +17,8 @@ from rest_framework.parsers import MultiPartParser, FormParser
 class Products(ViewSet):
     """Request handlers for Products in the Bangazon Platform"""
     permission_classes = (IsAuthenticatedOrReadOnly,)
-
+    # self is a reference to the class instance, we access variables that belong to that class.
+    # Doesn't have to be named self, but has to be the first param.
     def create(self, request):
         """
         @api {POST} /products POST new product
@@ -95,6 +96,7 @@ class Products(ViewSet):
 
             new_product.image_path = data
 
+        new_product.clean_fields(exclude="image_path")
         new_product.save()
 
         serializer = ProductSerializer(
@@ -237,7 +239,9 @@ class Products(ViewSet):
         """
         products = Product.objects.all()
 
-        # Support filtering by category and/or quantity in url, url is looking for 'category', 'min_price' etc.
+        # Support filtering by category and/or quantity in url, url is looking for 'category', 'min_price' etc.\
+        # self allows us to include the following properties in the /products url. i.e. products?location=onguday.
+        # self allows us to access products.
         category = self.request.query_params.get('category', None)
         quantity = self.request.query_params.get('quantity', None)
         order = self.request.query_params.get('order_by', None)
@@ -279,7 +283,7 @@ class Products(ViewSet):
 
         if number_sold is not None:
             def sold_filter(product):
-                if product.number_sold <= int(number_sold):
+                if product.number_sold >= int(number_sold):
                     return True
                 return False
 

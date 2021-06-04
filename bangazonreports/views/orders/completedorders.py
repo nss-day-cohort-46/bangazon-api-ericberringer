@@ -10,7 +10,7 @@ def completedorders_list(request):
             conn.row_factory = sqlite3.Row
             db_cursor = conn.cursor()
 
-            # ORM layout orders = Order.objects.filter(payment_type__isnull = False).annotate(total=Sum("lineitems__products__price"))
+            # ORM layout orders = Order.objects.filter(payment_type__isnull = False).annotate(total=Sum("lineitems__product__price"))
 
             db_cursor.execute("""
                 SELECT
@@ -42,8 +42,11 @@ def completedorders_list(request):
                 completed_orders[oid]["payment_method"] = row["payment_method"]
 
         list_of_completed_orders = completed_orders.values()
+        # values is stripping the oid off of each item and setting each property in the dict as a value.
 
+        # The path for our template html representation file
         template = 'orders/list_of_completed_orders.html'
+        # Context is making the data in this component available to be rendered in our html
         context = {
             'completedorder_list': list_of_completed_orders
         }

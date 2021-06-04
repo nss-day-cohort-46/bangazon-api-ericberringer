@@ -4,6 +4,9 @@ from bangazonreports.views import Connection
 
 def expensiveproducts_list(request):
 
+    # ORM expensiveproducts_list = Product.objects.filter(price__gte = 1000)
+    # gte = greater than or equal to
+
     if request.method == 'GET':
     # Connect to project database
         with sqlite3.connect(Connection.db_path) as conn:

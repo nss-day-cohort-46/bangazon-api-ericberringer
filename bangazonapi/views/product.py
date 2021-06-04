@@ -237,15 +237,29 @@ class Products(ViewSet):
         """
         products = Product.objects.all()
 
-        # Support filtering by category and/or quantity
+        # Support filtering by category and/or quantity in url, url is looking for 'category', 'min_price' etc.
         category = self.request.query_params.get('category', None)
         quantity = self.request.query_params.get('quantity', None)
         order = self.request.query_params.get('order_by', None)
         direction = self.request.query_params.get('direction', None)
         number_sold = self.request.query_params.get('number_sold', None)
         location = self.request.query_params.get('location', None)
+        min_price = self.request.query_params.get('min_price', None)
+
+        if min_price is not None:
+            # filter function that takes a product
+            def price_filter(product):
+                # if price is gti min price passed in the url
+                # set min_price param to an integer
+                if product.price >= int(min_price):
+                    return True
+                return False
+            # filter method filters all products through the price filter function
+            # (price_filter, products) is passing the products through the filter function
+            products = filter(price_filter, products)
 
         if location is not None:
+            # localhost8000/products?location=ongunday or a partial of a location will work
             products = products.filter(location__contains=location)
 
         if order is not None:

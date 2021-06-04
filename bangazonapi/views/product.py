@@ -243,6 +243,10 @@ class Products(ViewSet):
         order = self.request.query_params.get('order_by', None)
         direction = self.request.query_params.get('direction', None)
         number_sold = self.request.query_params.get('number_sold', None)
+        location = self.request.query_params.get('location', None)
+
+        if location is not None:
+            products = products.filter(location__contains=location)
 
         if order is not None:
             order_filter = order
